@@ -1,0 +1,155 @@
+/* Estilos para o modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modal-content.modal-large {
+    max-width: 1200px;
+    width: 95%;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #2196F3;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.combo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.combo-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-family: monospace;
+    background-color: #f9f9f9;
+}
+
+.combo-table tr:nth-child(even) td {
+    background-color: #f0f7ff;
+}
+
+/* Estilo para células clicáveis */
+.combo-cell {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.combo-cell:hover {
+    background-color: #e3f2fd;
+    text-decoration: underline;
+}
+
+/* Estilo para a navegação por tabs */
+.tabs-container {
+    margin-top: 20px;
+}
+
+.tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    padding: 8px 15px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.tab-btn.active {
+    background-color: #2196F3;
+    color: white;
+    border-color: #0b7dda;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content:first-child {
+    display: block;
+}
+
+.etc-cell {
+    color: #2196F3;
+    font-weight: bold;
+}
+
+/* Estilo para tabela de todas as combinações */
+.all-combinations {
+    margin-top: 20px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .tabs-nav {
+        justify-content: center;
+    }
+    
+    .tab-btn {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+    
+    .combo-table td {
+        padding: 5px;
+        font-size: 13px;
+    }
+}

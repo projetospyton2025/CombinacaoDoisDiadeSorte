@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agrupamento de Combinações de Dígitos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/agrupamento.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Agrupamento de Combinações de Dígitos</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="combinacao">Combinação Específica</button>
+            <button class="tab-btn" data-tab="todas">Todas as Combinações</button>
+        </div>
+        
+        <div class="tab-content" id="combinacao-tab">
+            <div class="input-group">
+                <label for="combinacao-input">Digite a combinação (separada por vírgulas):</label>
+                <input type="text" id="combinacao-input" placeholder="Ex: 0,1,2,3,4,5,6" value="0,1,2,3,4,5,6">
+                <button id="analisar-btn">Analisar Combinação</button>
+            </div>
+            
+            <div class="results" id="combinacao-results">
+                <div class="info-box">
+                    <h2>Informações da Combinação</h2>
+                    <div id="info-combinacao"></div>
+                    <div id="total-agrupamentos"></div>
+                </div>
+                
+                <div class="agrupamentos-box">
+                    <h2>Agrupamentos de Dois em Dois</h2>
+                    <div id="agrupamentos-container" class="agrupamentos-grid"></div>
+                </div>
+                
+                <div class="palpites-box">
+                    <h2>Estatísticas Adicionais</h2>
+                    <div id="palpites-info"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content hidden" id="todas-tab">
+            <div class="input-group">
+                <label for="tamanho-select">Selecione o tamanho da combinação:</label>
+                <select id="tamanho-select">
+                    <option value="3">3 dígitos</option>
+                    <option value="4">4 dígitos</option>
+                    <option value="5">5 dígitos</option>
+                    <option value="6">6 dígitos</option>
+                    <option value="7" selected>7 dígitos</option>
+                    <option value="8">8 dígitos</option>
+                    <option value="9">9 dígitos</option>
+                    <option value="10">10 dígitos</option>
+                </select>
+                <button id="carregar-todas-btn">Carregar Combinações</button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="filtro-primeiro">Filtrar por primeiro dígito:</label>
+                    <select id="filtro-primeiro">
+                        <option value="todos">Todos</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
+                
+                <div class="search-group">
+                    <label for="busca-input">Buscar combinação:</label>
+                    <input type="text" id="busca-input" placeholder="Ex: 0,1,2">
+                    <button id="busca-btn">Buscar</button>
+                </div>
+            </div>
+            
+            <div class="results" id="todas-results">
+                <div class="info-box">
+                    <h2>Total de Combinações</h2>
+                    <div id="total-combinacoes"></div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="combinacoes-table">
+                        <thead>
+                            <tr>
+                                <th>Combinação</th>
+                                <th>Total de Agrupamentos</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="combinacoes-body">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination">
+                    <button id="anterior-btn" disabled>Anterior</button>
+                    <span id="pagina-info">Página 1 de 1</span>
+                    <button id="proximo-btn" disabled>Próximo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="link-container">
+        <a href="/" class="link-button">Voltar ao Gerador</a>
+        <a href="/tabela_combinacoes" class="link-button">Ver Tabela de Estatísticas</a>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/agrupamento.js') }}"></script>
+    
+    <footer>
+        Feito por: <i>Márcio Fernando Maia - Todos os direitos reservados - 2025</i>
+    </footer>
+</body>
+</html>

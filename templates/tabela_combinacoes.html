@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Combinações de Dígitos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/table_style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+</head>
+<body>
+    <div class="tabela-container">
+        <div class="header-container">
+            <h1 class="title">TOTAIS</h1>
+            <h2 class="subtitle">Total de combinações</h2>
+        </div>
+        
+        <div class="table-responsive">
+            <table id="tabela-estatisticas" class="tabela-estatisticas">
+                <thead>
+                    <tr>
+                        <th>Combinações com</th>
+                        <th>Dígitos</th>
+                        <th>Agrupamento com duas dezenas</th>
+                        <th>Combinações destas dezenas (agrupada em 2)</th>
+                        <th>0</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>...</th>
+                    </tr>
+                </thead>
+                <tbody id="estatisticas-corpo">
+                    <!-- Dados serão preenchidos via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="controls">
+            <label for="tamanho-tabela">Selecione o tamanho para ver as combinações:</label>
+            <select id="tamanho-tabela">
+                <option value="1">1 dígito</option>
+                <option value="2">2 dígitos</option>
+                <option value="3" selected>3 dígitos</option>
+                <option value="4">4 dígitos</option>
+                <option value="5">5 dígitos</option>
+                <option value="6">6 dígitos</option>
+                <option value="7">7 dígitos</option>
+                <option value="8">8 dígitos</option>
+                <option value="9">9 dígitos</option>
+                <option value="10">10 dígitos</option>
+            </select>
+            <button id="atualizar-tabela">Atualizar Tabela</button>
+            <a href="/" class="link-button">Voltar ao Gerador</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/tabela.js') }}"></script>
+    <footer>Feito por: <i>Márcio Fernando Maia - Todos os direitos reservado - 2025</i></footer>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Combinações de Dígitos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+</head>
+<body>
+
+<!--
+		<div class="instrucaoes">
+				<h2>Instruções de uso:</h2>
+				<ol>
+				  <li>Selecione o tamanho do grupo (1-10)</li>
+				  <li>Clique em "Gerar Combinações"</li>
+				  <li>Visualize as combinações geradas</li>
+				  <li>Clique em "Ver Estatísticas" para um resumo rápido</li>
+				  <li>Ou clique em "Ver Tabela de Estatísticas" para a tabela completa</li>
+				</ol>
+
+				<h2>Tabela de Estatísticas:</h2>
+
+					<ul>
+					  <li>Visualize as estatísticas completas para todos os tamanhos</li>
+					  <li>Clique em qualquer combinação para ver detalhes em um modal</li>
+					  <li>Selecione um tamanho específico e clique em "Atualizar Tabela" para focar nesse tamanho</li>
+					  <li>Clique em "Voltar ao Gerador" para retornar à página principal</li>
+					</ul>
+		</div><br />
+-->
+
+
+
+    <div class="container">
+        <h1>Gerador de Combinações de Dígitos</h1>
+        <div class="controls">
+            <label for="tamanho">Tamanho do grupo:</label>
+            <select id="tamanho">
+                <option value="1">1 dígito</option>
+                <option value="2">2 dígitos</option>
+                <option value="3" selected>3 dígitos</option>
+                <option value="4">4 dígitos</option>
+                <option value="5">5 dígitos</option>
+                <option value="6">6 dígitos</option>
+                <option value="7">7 dígitos</option>
+                <option value="8">8 dígitos</option>
+                <option value="9">9 dígitos</option>
+                <option value="10">10 dígitos</option>
+            </select>
+            <button id="gerar">Gerar Combinações</button>
+            <button id="ver-estatisticas" disabled>Ver Estatísticas</button>
+        </div>
+        
+        <div class="results" id="results">
+            <h2 id="resultado-titulo"></h2>
+            <div class="info" id="total-info"></div>
+            <div class="combs-container" id="combinacoes"></div>
+            <div class="pagination">
+                <button id="anterior" disabled>Anterior</button>
+                <button id="proximo" disabled>Próximo</button>
+            </div>
+            <div class="info" id="pagina-info"></div>
+        </div>
+    </div>
+
+    <!-- Nova div separada para o link da tabela estatística -->
+    <div class="tabela-link-container">
+    <h3>Acesse também:</h3>
+		<div class="links-nav">
+			<a href="/tabela_combinacoes" class="tabela-link">Tabela de Estatísticas</a>
+			<a href="/agrupamento_combinacoes" class="tabela-link">Agrupamento de Combinações</a>
+			<a href="/tabela_combinacoes_mega_sena" class="tabela-link">Tabela Combinações</a>
+		</div>
+	</div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+    <footer>Feito por: <i>Márcio Fernando Maia -  Todos os direitos reservado - 2025</i></footer>
+</body>
+</html>

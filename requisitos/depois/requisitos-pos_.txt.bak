@@ -1,0 +1,3537 @@
+
+Agora você quer gerar pares de dezenas com números de 01 a 60, incluindo os pares gêmeos (11, 22, 33, 44, 55, etc.) e também pares invertidos (12, 21, 13, 31, etc.), mas não pode passar de 60.
+
+Aqui está como você pode fazer isso:
+Passo 1: Gerar os pares de dezenas
+
+    Pares gêmeos: São aqueles em que os dois números são iguais (11, 22, 33, 44, 55, 66, etc.).
+    Pares invertidos: São os pares formados pelos números distintos, mas considerando também a ordem (por exemplo, 12 e 21, 13 e 31, etc.).
+
+Você deseja garantir que os pares gerados não ultrapassem 60, então o número máximo de cada dígito deve ser 60.
+Exemplo:
+
+Com os números de 01 a 60, teríamos os seguintes pares possíveis:
+
+Pares gêmeos:
+11, 22, 33, 44, 55, 66, 77, 88, 99, 00, ... até 60 (se permitido).
+
+Pares invertidos:
+12, 21, 13, 31, 14, 41, 15, 51, 16, 61... mas aqui você precisa ter cuidado para não ultrapassar 60.
+Para evitar combinações inválidas (como 61, 62...), temos que garantir que os números de cada par estejam no intervalo de 01 a 60.
+Passo 2: Filtrar os pares válidos
+
+Você pode gerar pares de números de 01 a 60, mas apenas os pares que não ultrapassam 60 serão válidos. Para isso, ao gerar pares, podemos verificar se a combinação é válida e rejeitar as combinações inválidas (como 61, 62, etc.).
+Por exemplo:
+
+    12 e 21 são válidos.
+    16 e 61 não são válidos (61 está fora do intervalo de 01 a 60).
+    33 e 33 são válidos.
+
+Esses pares seriam então coletados, e depois você poderia usá-los para gerar combinações de 6 números (ou 6 pares).
+Passo 3: Gerar combinações de 6 pares
+
+Depois de gerar os pares válidos, você pode formar combinações de 6 pares (não de 6 números diretamente, mas de 6 pares).
+
+
+
+PARA ESTE CÓDIGO NÃO EXCLUA E NEM OMITA NADA OU SEJA NÃO MEXA NA LÓGICA JA PRESENTE 
+APENAS FOQUE NAS INFORMAÇÕES ACIMA... 
+PEGA OS DIGITOS, AGRUPA EM DOIS E DEPOIS ESTE RESULTADO AGRUPE DE 6 EM SEIS LEVANDO EM CONCIDERAÇÃO A QUESTÃO DE 01 A 60 QUE É O MÁXIMO QUANDO SE FALA EM MEGA SENA
+
+
+
+ Diretório: J:\Meu Drive\ProjetosPython\Loterias\Combinacoes\Combinacao-II
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----        04/03/2025     05:10                .git
+d-----        03/03/2025     10:57                requisitos
+d-----        03/03/2025     10:56                static
+d-----        03/03/2025     10:59                templates
+d-----        03/03/2025     11:02                venv
+d-----        04/03/2025     05:07                __pycache__
+------        03/03/2025     10:51             15 README.md
+------        03/03/2025     10:51           1096 LICENSE
+------        03/03/2025     19:43           9037 app.py
+------        03/03/2025     11:04             29 requirements.txt
+------        03/03/2025     16:50           3466 mega_sena_utils.py
+------        03/03/2025     16:50           2796 combinacoes_utils.py
+
+Flask==2.0.1
+Werkzeug==2.0.1
+
+import math
+from itertools import combinations
+
+def calcular_combinacoes(n, k):
+    """
+    Calcula o número de combinações de n elementos tomados k a k.
+    Usa a fórmula matemática de combinação: C(n,k) = n! / (k! * (n-k)!)
+    
+    Args:
+        n: Número total de elementos
+        k: Tamanho do subconjunto
+        
+    Returns:
+        Número de combinações possíveis
+    """
+    return math.comb(n, k)
+
+def calcular_palpites_mega_sena(combinacao):
+    """
+    Calcula o número de palpites possíveis para a Mega Sena
+    baseado em uma combinação de dígitos.
+    
+    A Mega Sena usa 6 números de 1 a 60.
+    
+    Args:
+        combinacao: Lista ou string contendo a combinação de dígitos
+        
+    Returns:
+        Número de palpites possíveis
+    """
+    # Converter para lista se for uma string
+    if isinstance(combinacao, str):
+        combinacao = [int(d) for d in combinacao.split(',')]
+    
+    # Converter para set para garantir valores únicos
+    digitos = set(combinacao)
+    
+    # Número total de dezenas da Mega Sena
+    total_dezenas = 60
+    
+    # Número de dezenas que formam um jogo (6 para a Mega Sena padrão)
+    dezenas_jogo = 6
+    
+    # Total de combinações possíveis (60 escolher 6)
+    total_combinacoes = calcular_combinacoes(total_dezenas, dezenas_jogo)
+    
+    # Para este exemplo, vamos calcular um valor baseado no tamanho da combinação
+    if len(digitos) <= 6:
+        # Se temos menos de 6 dígitos, não temos jogos completos
+        return 0
+    
+    # Número de formas de escolher 6 dígitos dentre os disponíveis
+    combinacoes_digitos = calcular_combinacoes(len(digitos), 6)
+    
+    # Número de palpites por combinação de dígitos (exemplo)
+    palpites_por_combinacao = 720  # 6! (possíveis ordenações)
+    
+    # Total estimado de palpites
+    total_palpites = combinacoes_digitos * palpites_por_combinacao
+    
+    # Ajustar para não exceder o total de combinações da Mega Sena
+    return min(total_palpites, total_combinacoes)
+
+def calcular_jogos_mega_sena(tamanho_combinacao):
+    """
+    Calcula o número estimado de jogos da Mega Sena possíveis
+    para uma combinação de dígitos de um tamanho específico.
+    
+    Args:
+        tamanho_combinacao: Tamanho da combinação de dígitos
+        
+    Returns:
+        Número estimado de jogos possíveis
+    """
+    # Total de combinações possíveis na Mega Sena (60 escolher 6)
+    total_mega = calcular_combinacoes(60, 6)  # 50.063.860
+    
+    # Número de combinações de tamanho_combinacao 
+    # de dígitos (0-9) tomados tamanho_combinacao a tamanho_combinacao
+    total_combinacoes_tamanho = calcular_combinacoes(10, tamanho_combinacao)
+    
+    # Fator de proporção (ajustável conforme a estratégia)
+    if tamanho_combinacao < 6:
+        return 0  # Impossível formar jogos completos
+    
+    # Fórmula ajustada para cada tamanho (exemplo)
+    if tamanho_combinacao == 6:
+        return 720  # 6! (possíveis arranjos de 6 dígitos)
+    elif tamanho_combinacao == 7:
+        return calcular_combinacoes(7, 6) * 720  # 7 escolher 6 * 6! = 35.280
+    else:
+        # Fórmula geral
+        combinacoes_6_digitos = calcular_combinacoes(tamanho_combinacao, 6)
+        mapeamentos_possiveis = min(10**6, total_mega // combinacoes_6_digitos)
+        return combinacoes_6_digitos * mapeamentos_possiveis
+		
+		from itertools import combinations
+
+def gerar_combinacoes(n, k):
+    """
+    Gera todas as combinações possíveis de k elementos a partir de n elementos.
+    
+    Args:
+        n: Lista de elementos
+        k: Tamanho da combinação
+        
+    Returns:
+        Lista com todas as combinações
+    """
+    return list(combinations(n, k))
+
+def contar_por_primeiro_digito(combinacoes):
+    """
+    Conta as combinações agrupadas pelo primeiro dígito.
+    
+    Args:
+        combinacoes: Lista de combinações
+        
+    Returns:
+        Dicionário com contagem por primeiro dígito
+    """
+    contagem = {}
+    for comb in combinacoes:
+        primeiro = comb[0]
+        if primeiro not in contagem:
+            contagem[primeiro] = 0
+        contagem[primeiro] += 1
+    return contagem
+
+def calcular_total_agrupamentos_dois_em_dois(combinacao):
+    """
+    Calcula o total de agrupamentos possíveis de dois em dois para uma combinação.
+    
+    Args:
+        combinacao: Lista com os dígitos da combinação
+        
+    Returns:
+        Total de agrupamentos de dois em dois
+    """
+    # Total de maneiras de escolher 2 elementos dentre len(combinacao)
+    return len(list(combinations(combinacao, 2)))
+
+def analisar_combinacao_especifica(combinacao):
+    """
+    Analisa uma combinação específica de dígitos (ex: [0,1,2,3,4,5,6]).
+    Calcula o total de agrupamentos de 2 em 2 possíveis.
+    
+    Args:
+        combinacao: Lista com os dígitos da combinação
+        
+    Returns:
+        Dicionário com os resultados da análise
+    """
+    # Converter para lista se for uma string ou tupla
+    if isinstance(combinacao, str):
+        combinacao = [int(d) for d in combinacao.split(',')]
+    elif isinstance(combinacao, tuple):
+        combinacao = list(combinacao)
+    
+    # Calcular agrupamentos de 2 em 2
+    agrupamentos_dois = list(combinations(combinacao, 2))
+    total_agrupamentos = len(agrupamentos_dois)
+    
+    return {
+        "combinacao": combinacao,
+        "tamanho_agrupamento": 2,
+        "total_combinacoes": total_agrupamentos,
+        "agrupamentos": agrupamentos_dois
+    }
+
+def analisar_todas_combinacoes(tamanho):
+    """
+    Analisa todas as combinações de dígitos com o tamanho especificado.
+    
+    Args:
+        tamanho: Tamanho das combinações a analisar
+        
+    Returns:
+        Lista de dicionários com os resultados das análises
+    """
+    digitos = list(range(10))  # dígitos de 0 a 9
+    todas_combinacoes = list(combinations(digitos, tamanho))
+    
+    resultados = []
+    for comb in todas_combinacoes:
+        resultado = analisar_combinacao_especifica(comb)
+        resultados.append(resultado)
+    
+    return resultados
+	from flask import Flask, render_template, jsonify, request
+import os
+import math
+from itertools import combinations
+from combinacoes_utils import analisar_combinacao_especifica, analisar_todas_combinacoes
+from mega_sena_utils import calcular_palpites_mega_sena, calcular_jogos_mega_sena
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/tabela_combinacoes')
+def tabela_combinacoes():
+    return render_template('tabela_combinacoes.html')
+
+@app.route('/api/combinacoes/<int:tamanho>')
+def get_combinacoes(tamanho):
+    # Verificar se o tamanho está dentro dos limites permitidos
+    if tamanho < 1 or tamanho > 10:
+        return jsonify({"error": "Tamanho inválido. Deve ser entre 1 e 10."}), 400
+    
+    # Gerar todas as combinações possíveis
+    digitos = list(range(10))  # dígitos de 0 a 9
+    todas_combinacoes = list(combinations(digitos, tamanho))
+    
+    # Converter combinações para formato de lista
+    combinacoes_formatadas = [list(comb) for comb in todas_combinacoes]
+    
+    # Calcular total
+    total = len(combinacoes_formatadas)
+    
+    # Agrupar por primeiro dígito
+    por_primeiro_digito = {}
+    for i in range(10):
+        por_primeiro_digito[i] = [comb for comb in combinacoes_formatadas if comb[0] == i]
+    
+    return jsonify({
+        "tamanho": tamanho,
+        "total": total,
+        "por_primeiro_digito": por_primeiro_digito
+    })
+
+# Função para calcular o número de combinações de n elementos tomados k a k
+def calcular_combinacoes(n, k):
+    return math.comb(n, k)
+
+# Função para calcular o número de agrupamentos com duas dezenas
+def calcular_agrupamentos_duas_dezenas(tamanho):
+    # Para agrupamentos de dois dígitos (0-9), temos 10 escolher 2 = 45 possibilidades
+    if tamanho <= 2:
+        return tamanho  # Para tamanho 1, apenas 1 agrupamento, para 2, são 2 agrupamentos
+    else:
+        # Para tamanhos maiores, calculamos quantas combinações de 2 dígitos temos dos 10 dígitos
+        return calcular_combinacoes(10, 2)
+
+# Função para calcular combinações de agrupamento em 2
+def calcular_combinacoes_agrupadas(tamanho):
+    if tamanho <= 2:
+        return tamanho
+    # Para tamanhos maiores, calculamos com base no número de combinações possíveis dentro de cada agrupamento
+    agrupamentos = calcular_agrupamentos_duas_dezenas(tamanho)
+    combinacoes_por_agrupamento = calcular_combinacoes(tamanho, 2)
+    return agrupamentos * combinacoes_por_agrupamento
+
+@app.route('/api/estatisticas')
+def get_estatisticas():
+    # Calcular o número de combinações para cada tamanho de 1 a 10
+    estatisticas = []
+    n = 10  # número total de dígitos (0-9)
+    
+    for k in range(1, n + 1):
+        total_combinacoes = calcular_combinacoes(n, k)
+        
+        # Calcular os agrupamentos com duas dezenas
+        agrupamentos_duas_dezenas = calcular_agrupamentos_duas_dezenas(k)
+        
+        # Calcular combinações destes agrupamentos
+        combinacoes_agrupadas = calcular_combinacoes_agrupadas(k)
+        
+        estatisticas.append({
+            "tamanho": k,
+            "total": total_combinacoes,
+            "agrupamentos_duas_dezenas": agrupamentos_duas_dezenas,
+            "combinacoes_agrupadas": combinacoes_agrupadas
+        })
+    
+    return jsonify(estatisticas)
+
+
+@app.route('/agrupamento_combinacoes')
+def agrupamento_combinacoes():
+    """Nova rota para a página de agrupamento de combinações"""
+    return render_template('agrupamento_combinacoes.html')
+
+
+@app.route('/tabela_combinacoes_mega_sena')
+def tabela_combinacoes_mega_sena():
+    """Nova rota para a página de tabela_combinacoes_mega_sena"""
+    return render_template('/tabela_combinacoes_mega_sena.html')
+
+
+@app.route('/api/combinacao_agrupamentos/<string:combinacao_str>')
+def get_combinacao_agrupamentos(combinacao_str):
+    """
+    Analisa uma combinação específica de dígitos e retorna todos os agrupamentos de 2 em 2.
+    
+    Args:
+        combinacao_str: String com a combinação (ex: "0,1,2,3,4,5,6")
+        
+    Returns:
+        JSON com os dados de agrupamentos
+    """
+    try:
+        # Converter a string para lista de inteiros
+        combinacao = [int(d) for d in combinacao_str.replace(' ', '').split(',')]
+        
+        # Verificar se a combinação é válida
+        if len(combinacao) < 2:
+            return jsonify({"error": "A combinação deve ter pelo menos 2 dígitos"}), 400
+        
+        if any(d < 0 or d > 9 for d in combinacao) or len(set(combinacao)) != len(combinacao):
+            return jsonify({"error": "Combinação inválida. Use dígitos de 0-9 sem repetição."}), 400
+            
+        # Calcular agrupamentos de 2 em 2
+        agrupamentos_dois = list(combinations(combinacao, 2))
+        
+        # Formatar para exibição
+        agrupamentos_formatados = []
+        for ag in agrupamentos_dois:
+            agrupamentos_formatados.append({
+                "par": list(ag),
+                "par_str": f"{ag[0]},{ag[1]}"
+            })
+        
+        # Cálculo correto de palpites para Mega Sena
+        palpites_mega = calcular_jogos_mega_sena(len(combinacao))
+        
+        return jsonify({
+            "combinacao": combinacao,
+            "tamanho": len(combinacao),
+            "tamanho_agrupamento": 2,
+            "total_agrupamentos": len(agrupamentos_dois),
+            "agrupamentos": agrupamentos_formatados,
+            "palpites_mega": palpites_mega
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/api/combinacoes_agrupadas/<int:tamanho>')
+def get_all_combinacoes_agrupadas(tamanho):
+    """
+    Retorna todas as combinações de um tamanho específico com seus agrupamentos de 2 em 2.
+    
+    Args:
+        tamanho: Tamanho das combinações (número de dígitos)
+        
+    Returns:
+        JSON com todas as combinações e seus agrupamentos
+    """
+    try:
+        # Verificar se o tamanho está dentro dos limites permitidos
+        if tamanho < 3 or tamanho > 10:
+            return jsonify({"error": "Tamanho inválido. Deve ser entre 3 e 10."}), 400
+        
+        # Gerar todas as combinações possíveis
+        digitos = list(range(10))  # dígitos de 0 a 9
+        todas_combinacoes = list(combinations(digitos, tamanho))
+        
+        # Calcular agrupamentos para cada combinação
+        resultados = []
+        for comb in todas_combinacoes:
+            comb_lista = list(comb)
+            agrupamentos_dois = list(combinations(comb_lista, 2))
+            
+            # Formatar para exibição
+            resultados.append({
+                "combinacao": comb_lista,
+                "combinacao_str": ",".join(map(str, comb_lista)),
+                "total_agrupamentos": len(agrupamentos_dois),
+                "agrupamentos": [list(ag) for ag in agrupamentos_dois]
+            })
+        
+        return jsonify({
+            "tamanho": tamanho,
+            "total_combinacoes": len(resultados),
+            "resultados": resultados
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/api/mega_sena/<string:combinacao_str>')
+def get_mega_sena_palpites(combinacao_str):
+    """
+    Calcula o número de palpites possíveis para a Mega Sena
+    baseado em uma combinação de dígitos.
+    
+    Args:
+        combinacao_str: String com a combinação (ex: "0,1,2,3,4,5,6")
+        
+    Returns:
+        JSON com os dados de palpites para Mega Sena
+    """
+    try:
+        # Converter a string para lista de inteiros
+        combinacao = [int(d) for d in combinacao_str.replace(' ', '').split(',')]
+        
+        # Verificar se a combinação é válida
+        if any(d < 0 or d > 9 for d in combinacao) or len(set(combinacao)) != len(combinacao):
+            return jsonify({"error": "Combinação inválida. Use dígitos de 0-9 sem repetição."}), 400
+            
+        # Cálculo de palpites para Mega Sena
+        palpites_mega = calcular_jogos_mega_sena(len(combinacao))
+        
+        # Total de combinações possíveis na Mega Sena (60 escolher 6)
+        total_mega = math.comb(60, 6)  # 50.063.860
+        
+        # Calcular porcentagem em relação ao total
+        porcentagem = (palpites_mega / total_mega) * 100 if total_mega > 0 else 0
+        
+        return jsonify({
+            "combinacao": combinacao,
+            "tamanho": len(combinacao),
+            "palpites_mega": palpites_mega,
+            "total_mega_sena": total_mega,
+            "porcentagem_cobertura": round(porcentagem, 6)
+        })
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=True)
+	<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise de Combinações para Mega-Sena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .tab-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .tabela-link-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .links-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .tabela-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #005EB8;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .tabela-link:hover {
+            background-color: #004085;
+            text-decoration: none;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .tab {
+            padding: 10px 15px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #fff;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        h1, h2 {
+            color: #005EB8;
+        }
+        .formula {
+            background-color: #f8f8f8;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 3px solid #005EB8;
+        }
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="tab-container">
+        <h1>Análise de Combinações para Mega-Sena</h1>
+        
+        <!-- Nova div separada para o link da tabela estatística -->
+        <div class="tabela-link-container">
+            <h3>Acesse também:</h3>
+            <div class="links-nav">
+                <a href="/tabela_combinacoes" class="tabela-link">Ver Tabela de Estatísticas</a>
+                <a href="/agrupamento_combinacoes" class="tabela-link">Agrupamento de Combinações</a>
+                <a href="/tabela_combinacoes_mega_sena" class="tabela-link">Tabela Combinações</a>
+            </div>
+        </div>
+        
+        <button class="download-btn" onclick="alert('Este é um exemplo visual. Para download real, você precisaria salvar esta página HTML.')">Salvar como Excel</button>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'resumo')">Resumo</div>
+            <div class="tab" onclick="openTab(event, 'sete')">7 Dígitos</div>
+            <div class="tab" onclick="openTab(event, 'oito')">8 Dígitos</div>
+            <div class="tab" onclick="openTab(event, 'nove')">9 Dígitos</div>
+            <div class="tab" onclick="openTab(event, 'dez')">10 Dígitos</div>
+            <div class="tab" onclick="openTab(event, 'formulas')">Fórmulas</div>
+        </div>
+        
+        <div id="resumo" class="tab-content active">
+            <h2>Resumo por Quantidade de Dígitos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Qtd. Dígitos</th>
+                        <th>Conjunto Exemplo</th>
+                        <th>Pares Possíveis</th>
+                        <th>Combinações de 6 Pares</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>0,1</td>
+                        <td>1</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>0,1,2</td>
+                        <td>3</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>0,1,2,3</td>
+                        <td>6</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>0,1,2,3,4</td>
+                        <td>10</td>
+                        <td>210</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>0,1,2,3,4,5</td>
+                        <td>15</td>
+                        <td>5.005</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>0,1,2,3,4,5,6</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>0,1,2,3,4,5,6,7</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>0,1,2,3,4,5,6,7,8</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>0,1,2,3,4,5,6,7,8,9</td>
+                        <td>45</td>
+                        <td>8.145.060</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="sete" class="tab-content">
+            <h2>Conjuntos de 7 Dígitos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Conjunto</th>
+                        <th>Pares Possíveis</th>
+                        <th>Combinações de 6 Pares</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0,1,2,3,4,5,6</td>
+                        <td>42 (ajustado)</td>
+                        <td>5.245.786</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,7</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,8</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,9</td>
+                        <td>41 (ajustado)</td>
+                        <td>4.496.388</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,6,7</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,6,8</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,6,9</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,7,8</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,7,9</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,8,9</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,5,6,7</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,5,6,8</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,5,6,9</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,5,7,8</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,5,7,9</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,5,8,9</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,6,7,8</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,6,7,9</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,6,8,9</td>
+                        <td>21</td>
+                        <td>54.264</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,7,8,9</td>
+                        <td>28 (ajustado)</td>
+                        <td>376.740</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="oito" class="tab-content">
+            <h2>Conjuntos de 8 Dígitos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Conjunto</th>
+                        <th>Pares Possíveis</th>
+                        <th>Combinações de 6 Pares</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0,1,2,3,4,5,6,7</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,6,8</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,6,9</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,7,8</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,7,9</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,8,9</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,6,7,8</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,6,7,9</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>1,2,3,4,5,6,7,8</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>1,2,3,4,5,6,8,9</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="nove" class="tab-content">
+            <h2>Conjuntos de 9 Dígitos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Conjunto</th>
+                        <th>Pares Possíveis</th>
+                        <th>Combinações de 6 Pares</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0,1,2,3,4,5,6,7,8</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,6,7,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,6,8,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,7,8,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,6,7,8,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,5,6,7,8,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,4,5,6,7,8,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,3,4,5,6,7,8,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>0,2,3,4,5,6,7,8,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                    <tr>
+                        <td>1,2,3,4,5,6,7,8,9</td>
+                        <td>36</td>
+                        <td>1.947.792</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="dez" class="tab-content">
+            <h2>Conjunto de 10 Dígitos</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Conjunto</th>
+                        <th>Pares Possíveis</th>
+                        <th>Combinações de 6 Pares</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0,1,2,3,4,5,6,7,8,9</td>
+                        <td>45</td>
+                        <td>8.145.060</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="formulas" class="tab-content">
+            <h2>Fórmulas e Definições</h2>
+            
+            <h3>Cálculo de Pares</h3>
+            <p>Para um conjunto de n dígitos, o número de pares possíveis é:</p>
+            <div class="formula">
+                C(n,2) = n(n-1)/2
+            </div>
+            
+            <h3>Cálculo de Combinações</h3>
+            <p>Para um conjunto com p pares, o número de combinações de 6 pares é:</p>
+            <div class="formula">
+                C(p,6) = p!/(6!(p-6)!)
+            </div>
+            
+            <h3>Para a Mega-Sena:</h3>
+            <ul>
+                <li>Os números da Mega-Sena vão de 01 a 60</li>
+                <li>Um par de números não pode ter soma superior a 60</li>
+            </ul>
+            
+            <h3>Casos Específicos Mencionados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Conjunto</th>
+                        <th>Pares Possíveis</th>
+                        <th>Combinações de 6 Pares</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0,1,2,3,4,5,6</td>
+                        <td>42 (ajustado)</td>
+                        <td>5.245.786</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,4,5,9</td>
+                        <td>41 (ajustado)</td>
+                        <td>4.496.388</td>
+                    </tr>
+                    <tr>
+                        <td>0,1,2,3,7,8,9</td>
+                        <td>28 (ajustado)</td>
+                        <td>376.740</td>
+                    </tr>
+                    <tr>
+                        <td>1,2,3,4,5,6,8,9</td>
+                        <td>28</td>
+                        <td>376.740</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Combinações de Dígitos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/table_style.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+</head>
+<body>
+    <div class="tabela-container">
+        <div class="header-container">
+            <h1 class="title">TOTAIS</h1>
+            <h2 class="subtitle">Total de combinações</h2>
+        </div>
+        
+        <div class="table-responsive">
+            <table id="tabela-estatisticas" class="tabela-estatisticas">
+                <thead>
+                    <tr>
+                        <th>Combinações com</th>
+                        <th>Dígitos</th>
+                        <th>Agrupamento com duas dezenas</th>
+                        <th>Combinações destas dezenas (agrupada em 2)</th>
+                        <th>0</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>...</th>
+                    </tr>
+                </thead>
+                <tbody id="estatisticas-corpo">
+                    <!-- Dados serão preenchidos via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="controls">
+            <label for="tamanho-tabela">Selecione o tamanho para ver as combinações:</label>
+            <select id="tamanho-tabela">
+                <option value="1">1 dígito</option>
+                <option value="2">2 dígitos</option>
+                <option value="3" selected>3 dígitos</option>
+                <option value="4">4 dígitos</option>
+                <option value="5">5 dígitos</option>
+                <option value="6">6 dígitos</option>
+                <option value="7">7 dígitos</option>
+                <option value="8">8 dígitos</option>
+                <option value="9">9 dígitos</option>
+                <option value="10">10 dígitos</option>
+            </select>
+            <button id="atualizar-tabela">Atualizar Tabela</button>
+            <a href="/" class="link-button">Voltar ao Gerador</a>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/tabela.js') }}"></script>
+    <footer>Feito por: <i>Márcio Fernando Maia - Todos os direitos reservado - 2025</i></footer>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Combinações de Dígitos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+</head>
+<body>
+
+<!--
+		<div class="instrucaoes">
+				<h2>Instruções de uso:</h2>
+				<ol>
+				  <li>Selecione o tamanho do grupo (1-10)</li>
+				  <li>Clique em "Gerar Combinações"</li>
+				  <li>Visualize as combinações geradas</li>
+				  <li>Clique em "Ver Estatísticas" para um resumo rápido</li>
+				  <li>Ou clique em "Ver Tabela de Estatísticas" para a tabela completa</li>
+				</ol>
+
+				<h2>Tabela de Estatísticas:</h2>
+
+					<ul>
+					  <li>Visualize as estatísticas completas para todos os tamanhos</li>
+					  <li>Clique em qualquer combinação para ver detalhes em um modal</li>
+					  <li>Selecione um tamanho específico e clique em "Atualizar Tabela" para focar nesse tamanho</li>
+					  <li>Clique em "Voltar ao Gerador" para retornar à página principal</li>
+					</ul>
+		</div><br />
+-->
+
+
+
+    <div class="container">
+        <h1>Gerador de Combinações de Dígitos</h1>
+        <div class="controls">
+            <label for="tamanho">Tamanho do grupo:</label>
+            <select id="tamanho">
+                <option value="1">1 dígito</option>
+                <option value="2">2 dígitos</option>
+                <option value="3" selected>3 dígitos</option>
+                <option value="4">4 dígitos</option>
+                <option value="5">5 dígitos</option>
+                <option value="6">6 dígitos</option>
+                <option value="7">7 dígitos</option>
+                <option value="8">8 dígitos</option>
+                <option value="9">9 dígitos</option>
+                <option value="10">10 dígitos</option>
+            </select>
+            <button id="gerar">Gerar Combinações</button>
+            <button id="ver-estatisticas" disabled>Ver Estatísticas</button>
+        </div>
+        
+        <div class="results" id="results">
+            <h2 id="resultado-titulo"></h2>
+            <div class="info" id="total-info"></div>
+            <div class="combs-container" id="combinacoes"></div>
+            <div class="pagination">
+                <button id="anterior" disabled>Anterior</button>
+                <button id="proximo" disabled>Próximo</button>
+            </div>
+            <div class="info" id="pagina-info"></div>
+        </div>
+    </div>
+
+    <!-- Nova div separada para o link da tabela estatística -->
+    <div class="tabela-link-container">
+    <h3>Acesse também:</h3>
+		<div class="links-nav">
+			<a href="/tabela_combinacoes" class="tabela-link">Tabela de Estatísticas</a>
+			<a href="/agrupamento_combinacoes" class="tabela-link">Agrupamento de Combinações</a>
+			<a href="/tabela_combinacoes_mega_sena" class="tabela-link">Tabela Combinações</a>
+		</div>
+	</div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+    <footer>Feito por: <i>Márcio Fernando Maia -  Todos os direitos reservado - 2025</i></footer>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agrupamento de Combinações de Dígitos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/agrupamento.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Agrupamento de Combinações de Dígitos</h1>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="combinacao">Combinação Específica</button>
+            <button class="tab-btn" data-tab="todas">Todas as Combinações</button>
+        </div>
+        
+        <div class="tab-content" id="combinacao-tab">
+            <div class="input-group">
+                <label for="combinacao-input">Digite a combinação (separada por vírgulas):</label>
+                <input type="text" id="combinacao-input" placeholder="Ex: 0,1,2,3,4,5,6" value="0,1,2,3,4,5,6">
+                <button id="analisar-btn">Analisar Combinação</button>
+            </div>
+            
+            <div class="results" id="combinacao-results">
+                <div class="info-box">
+                    <h2>Informações da Combinação</h2>
+                    <div id="info-combinacao"></div>
+                    <div id="total-agrupamentos"></div>
+                </div>
+                
+                <div class="agrupamentos-box">
+                    <h2>Agrupamentos de Dois em Dois</h2>
+                    <div id="agrupamentos-container" class="agrupamentos-grid"></div>
+                </div>
+                
+                <div class="palpites-box">
+                    <h2>Estatísticas Adicionais</h2>
+                    <div id="palpites-info"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content hidden" id="todas-tab">
+            <div class="input-group">
+                <label for="tamanho-select">Selecione o tamanho da combinação:</label>
+                <select id="tamanho-select">
+                    <option value="3">3 dígitos</option>
+                    <option value="4">4 dígitos</option>
+                    <option value="5">5 dígitos</option>
+                    <option value="6">6 dígitos</option>
+                    <option value="7" selected>7 dígitos</option>
+                    <option value="8">8 dígitos</option>
+                    <option value="9">9 dígitos</option>
+                    <option value="10">10 dígitos</option>
+                </select>
+                <button id="carregar-todas-btn">Carregar Combinações</button>
+            </div>
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="filtro-primeiro">Filtrar por primeiro dígito:</label>
+                    <select id="filtro-primeiro">
+                        <option value="todos">Todos</option>
+                        <option value="0">0</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
+                
+                <div class="search-group">
+                    <label for="busca-input">Buscar combinação:</label>
+                    <input type="text" id="busca-input" placeholder="Ex: 0,1,2">
+                    <button id="busca-btn">Buscar</button>
+                </div>
+            </div>
+            
+            <div class="results" id="todas-results">
+                <div class="info-box">
+                    <h2>Total de Combinações</h2>
+                    <div id="total-combinacoes"></div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="combinacoes-table">
+                        <thead>
+                            <tr>
+                                <th>Combinação</th>
+                                <th>Total de Agrupamentos</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="combinacoes-body">
+                            <!-- Preenchido via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination">
+                    <button id="anterior-btn" disabled>Anterior</button>
+                    <span id="pagina-info">Página 1 de 1</span>
+                    <button id="proximo-btn" disabled>Próximo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="link-container">
+        <a href="/" class="link-button">Voltar ao Gerador</a>
+        <a href="/tabela_combinacoes" class="link-button">Ver Tabela de Estatísticas</a>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/agrupamento.js') }}"></script>
+    
+    <footer>
+        Feito por: <i>Márcio Fernando Maia - Todos os direitos reservados - 2025</i>
+    </footer>
+</body>
+</html>
+// Função para criar e mostrar o modal com combinações detalhadas
+function mostrarModalCombinacoes(primeiroDigito, tamanho) {
+    // Verificar se temos os dados de combinações
+    if (!combinacoesData || combinacoesData.tamanho !== tamanho) {
+        alert('Primeiro selecione o tamanho correto e clique em "Atualizar Tabela"');
+        return;
+    }
+    
+    // Obter todas as combinações para este dígito inicial
+    const combsPorDigito = combinacoesData.por_primeiro_digito[primeiroDigito] || [];
+    
+    if (combsPorDigito.length === 0) {
+        alert('Não há combinações para este dígito inicial.');
+        return;
+    }
+    
+    // Criar o modal
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    // Cabeçalho do modal
+    const modalHeader = document.createElement('div');
+    modalHeader.className = 'modal-header';
+    
+    const modalTitle = document.createElement('h2');
+    modalTitle.textContent = `Combinações com ${tamanho} dígitos começando com ${primeiroDigito}`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.className = 'modal-close';
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modalOverlay);
+    });
+    
+    modalHeader.appendChild(modalTitle);
+    modalHeader.appendChild(closeBtn);
+    
+    // Conteúdo do modal
+    const modalBody = document.createElement('div');
+    modalBody.className = 'modal-body';
+    
+    const totalText = document.createElement('p');
+    totalText.textContent = `Total de combinações: ${combsPorDigito.length}`;
+    modalBody.appendChild(totalText);
+    
+    // Tabela de combinações
+    const comboTable = document.createElement('table');
+    comboTable.className = 'combo-table';
+    
+    // Criar linhas para exibir as combinações em uma grade
+    const combsPerRow = 6;
+    const rows = Math.ceil(combsPorDigito.length / combsPerRow);
+    
+    for (let i = 0; i < rows; i++) {
+        const row = document.createElement('tr');
+        
+        for (let j = 0; j < combsPerRow; j++) {
+            const index = i * combsPerRow + j;
+            
+            if (index < combsPorDigito.length) {
+                const cell = document.createElement('td');
+                cell.textContent = combsPorDigito[index].join(',');
+                row.appendChild(cell);
+            } else {
+                const cell = document.createElement('td');
+                row.appendChild(cell);
+            }
+        }
+        
+        comboTable.appendChild(row);
+    }
+    
+    modalBody.appendChild(comboTable);
+    
+    // Adicionar tudo ao modal
+    modalContent.appendChild(modalHeader);
+    modalContent.appendChild(modalBody);
+    modalOverlay.appendChild(modalContent);
+    
+    // Adicionar o modal à página
+    document.body.appendChild(modalOverlay);
+}
+
+// Adicionar listeners para as células da tabela
+function adicionarListenersCelulas() {
+    const células = document.querySelectorAll('.combo-cell');
+    
+    células.forEach((célula, index) => {
+        // Calcular qual linha e coluna (dígito) esta célula representa
+        const linha = Math.floor(index / 5);
+        const coluna = index % 5;
+        
+        // Não adicionar listener para linhas 8-10 (índices 7-9, que são "?")
+        if (linha >= 7) return;
+        
+        célula.style.cursor = 'pointer';
+        célula.title = 'Clique para ver todas as combinações';
+        
+        célula.addEventListener('click', () => {
+            mostrarModalCombinacoes(coluna, linha + 1);
+        });
+    });
+}
+
+// Adicionar os listeners após carregar a tabela
+document.addEventListener('DOMContentLoaded', () => {
+    // Aguarde a tabela ser preenchida
+    setTimeout(() => {
+        adicionarListenersCelulas();
+    }, 500);
+});
+
+// Adicionar listener para atualizar os listeners das células quando a tabela é atualizada
+atualizarBtn.addEventListener('click', () => {
+    setTimeout(() => {
+        adicionarListenersCelulas();
+    }, 500);
+});
+// Elementos do DOM
+const tabelaCorpo = document.getElementById('estatisticas-corpo');
+const tamanhoTabelaSelect = document.getElementById('tamanho-tabela');
+const atualizarBtn = document.getElementById('atualizar-tabela');
+
+// Dados para armazenar as estatísticas
+let estatisticasData = [];
+let combinacoesData = {};
+
+// Carregar os dados iniciais ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    // Carregar estatísticas para todos os tamanhos
+    carregarEstatisticas();
+    
+    // Pré-carregar combinações para todos os tamanhos de 1 a 10
+    for (let i = 1; i <= 10; i++) {
+        carregarCombinacoes(i);
+    }
+});
+
+// Event listener para o botão de atualizar
+atualizarBtn.addEventListener('click', () => {
+    atualizarTabelaComDados();
+});
+
+// Função para carregar estatísticas da API
+async function carregarEstatisticas() {
+    try {
+        const response = await fetch('/api/estatisticas');
+        if (response.ok) {
+            estatisticasData = await response.json();
+            preencherTabelaEstatisticas();
+        } else {
+            console.error('Erro ao carregar estatísticas:', response.status);
+        }
+    } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+    }
+}
+
+// Função para carregar combinações para um tamanho específico
+async function carregarCombinacoes(tamanho) {
+    try {
+        const response = await fetch(`/api/combinacoes/${tamanho}`);
+        if (response.ok) {
+            const data = await response.json();
+            combinacoesData[tamanho] = data;
+            // Atualizar a tabela com as combinações carregadas
+            atualizarCombinacoes(tamanho);
+        } else {
+            console.error(`Erro ao carregar combinações para tamanho ${tamanho}:`, response.status);
+        }
+    } catch (error) {
+        console.error(`Erro ao carregar combinações para tamanho ${tamanho}:`, error);
+    }
+}
+
+// Função para gerar todas as combinações de tamanho k
+function gerarTodasCombinacoes(k) {
+    const digitos = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const resultado = [];
+    
+    function combinar(inicio, atual) {
+        if (atual.length === k) {
+            resultado.push([...atual]);
+            return;
+        }
+        
+        for (let i = inicio; i < digitos.length; i++) {
+            atual.push(digitos[i]);
+            combinar(i + 1, atual);
+            atual.pop();
+        }
+    }
+    
+    combinar(0, []);
+    return resultado;
+}
+
+// Função para preencher a tabela com estatísticas
+function preencherTabelaEstatisticas() {
+    if (!estatisticasData || estatisticasData.length === 0) return;
+    
+    tabelaCorpo.innerHTML = '';
+    
+    estatisticasData.forEach(item => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-tamanho', item.tamanho);
+        
+        // Coluna "Combinações com"
+        const colCombCom = document.createElement('td');
+        colCombCom.textContent = item.tamanho;
+        row.appendChild(colCombCom);
+        
+        // Coluna "Dígitos" (total de combinações)
+        const colDigitos = document.createElement('td');
+        colDigitos.textContent = item.total;
+        row.appendChild(colDigitos);
+        
+        // Coluna "Agrupamento com duas dezenas"
+        const colAgrupamento = document.createElement('td');
+        colAgrupamento.textContent = item.agrupamentos_duas_dezenas;
+        row.appendChild(colAgrupamento);
+        
+        // Coluna "Combinações destas dezenas (agrupada em 2)"
+        const colCombAgrupadas = document.createElement('td');
+        colCombAgrupadas.textContent = item.combinacoes_agrupadas;
+        row.appendChild(colCombAgrupadas);
+        
+        // Colunas para cada primeiro dígito (0-4)
+        for (let i = 0; i <= 4; i++) {
+            const colDigito = document.createElement('td');
+            colDigito.className = 'combo-cell';
+            colDigito.setAttribute('data-digito', i);
+            
+            // Inicialmente colocamos "Carregando..." até termos os dados reais
+            colDigito.textContent = "Carregando...";
+            
+            row.appendChild(colDigito);
+        }
+        
+        // Coluna "..."
+        const colEtc = document.createElement('td');
+        colEtc.textContent = 'Mais combinações...';
+        colEtc.className = 'etc-cell';
+        colEtc.title = 'Clique para ver mais combinações';
+        colEtc.style.cursor = 'pointer';
+        colEtc.addEventListener('click', () => {
+            mostrarTodasCombinacoes(item.tamanho);
+        });
+        row.appendChild(colEtc);
+        
+        tabelaCorpo.appendChild(row);
+    });
+}
+
+// Função para atualizar as células com combinações reais
+function atualizarCombinacoes(tamanho) {
+    if (!combinacoesData[tamanho]) return;
+    
+    const data = combinacoesData[tamanho];
+    
+    // Encontrar a linha correta
+    const row = document.querySelector(`tr[data-tamanho="${tamanho}"]`);
+    if (!row) return;
+    
+    // Atualizar as células para cada dígito inicial (0-4)
+    for (let i = 0; i <= 4; i++) {
+        const cell = row.querySelector(`td[data-digito="${i}"]`);
+        if (!cell) continue;
+        
+        const combsPorDigito = data.por_primeiro_digito[i] || [];
+        
+        if (combsPorDigito.length > 0) {
+            // Mostrar a primeira combinação (ou até 3 se couber)
+            const combs = combsPorDigito.slice(0, 1);
+            cell.textContent = combs.map(comb => comb.join(',')).join('\n');
+            
+            // Adicionar evento de clique para mostrar todas as combinações deste dígito
+            cell.style.cursor = 'pointer';
+            cell.title = 'Clique para ver todas as combinações';
+            
+            // Importante: remover listeners antigos para evitar duplicação
+            const newCell = cell.cloneNode(true);
+            cell.parentNode.replaceChild(newCell, cell);
+            
+            // Adicionar novo evento
+            newCell.addEventListener('click', () => {
+                mostrarCombinacoesPorDigito(tamanho, i);
+            });
+        } else {
+            cell.textContent = 'N/A';
+        }
+    }
+}
+
+
+
+// Função para mostrar modal com todas as combinações por dígito
+function mostrarCombinacoesPorDigito(tamanho, primeiroDigito) {
+	console.log("Abrindo modal para:", tamanho, primeiroDigito);
+    console.log("Dados disponíveis:", combinacoesData[tamanho]);
+    if (!combinacoesData[tamanho]) {
+        alert('Dados não disponíveis para este tamanho.');
+        return;
+    }
+    
+    const data = combinacoesData[tamanho];
+    const combsPorDigito = data.por_primeiro_digito[primeiroDigito] || [];
+    
+    if (combsPorDigito.length === 0) {
+        alert('Não há combinações começando com este dígito.');
+        return;
+    }
+    
+    // Criar o modal
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    // Cabeçalho do modal
+    const modalHeader = document.createElement('div');
+    modalHeader.className = 'modal-header';
+    
+    const modalTitle = document.createElement('h2');
+    modalTitle.textContent = `Combinações com ${tamanho} dígitos começando com ${primeiroDigito}`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.className = 'modal-close';
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modalOverlay);
+    });
+    
+    modalHeader.appendChild(modalTitle);
+    modalHeader.appendChild(closeBtn);
+    
+    // Corpo do modal
+    const modalBody = document.createElement('div');
+    modalBody.className = 'modal-body';
+    
+    const totalText = document.createElement('p');
+    totalText.textContent = `Total de combinações: ${combsPorDigito.length}`;
+    modalBody.appendChild(totalText);
+    
+    // Tabela de combinações
+    const comboTable = document.createElement('table');
+    comboTable.className = 'combo-table';
+    
+    // Criar linhas para exibir as combinações em uma grade
+    const combsPerRow = 6;
+    const rows = Math.ceil(combsPorDigito.length / combsPerRow);
+    
+    for (let i = 0; i < rows; i++) {
+        const row = document.createElement('tr');
+        
+        for (let j = 0; j < combsPerRow; j++) {
+            const index = i * combsPerRow + j;
+            
+            if (index < combsPorDigito.length) {
+                const cell = document.createElement('td');
+                cell.textContent = combsPorDigito[index].join(',');
+                row.appendChild(cell);
+            } else {
+                const cell = document.createElement('td');
+                row.appendChild(cell);
+            }
+        }
+        
+        comboTable.appendChild(row);
+    }
+    
+    modalBody.appendChild(comboTable);
+    
+    // Adicionar tudo ao modal
+    modalContent.appendChild(modalHeader);
+    modalContent.appendChild(modalBody);
+    modalOverlay.appendChild(modalContent);
+    
+    // Adicionar o modal à página
+    document.body.appendChild(modalOverlay);
+}
+
+// Função para mostrar modal com TODAS as combinações de um tamanho específico
+function mostrarTodasCombinacoes(tamanho) {
+    if (!combinacoesData[tamanho]) {
+        alert('Dados não disponíveis para este tamanho.');
+        return;
+    }
+    
+    const data = combinacoesData[tamanho];
+    
+    // Criar o modal
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content modal-large';
+    
+    // Cabeçalho do modal
+    const modalHeader = document.createElement('div');
+    modalHeader.className = 'modal-header';
+    
+    const modalTitle = document.createElement('h2');
+    modalTitle.textContent = `Todas as combinações com ${tamanho} dígitos`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.className = 'modal-close';
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modalOverlay);
+    });
+    
+    modalHeader.appendChild(modalTitle);
+    modalHeader.appendChild(closeBtn);
+    
+    // Corpo do modal
+    const modalBody = document.createElement('div');
+    modalBody.className = 'modal-body';
+    
+    const totalText = document.createElement('p');
+    totalText.textContent = `Total de combinações: ${data.total}`;
+    modalBody.appendChild(totalText);
+    
+    // Criar tabs para cada dígito inicial
+    const tabsContainer = document.createElement('div');
+    tabsContainer.className = 'tabs-container';
+    
+    const tabsNav = document.createElement('div');
+    tabsNav.className = 'tabs-nav';
+    
+    const tabsContent = document.createElement('div');
+    tabsContent.className = 'tabs-content';
+    
+    // Criar uma tab para cada dígito inicial
+    for (let i = 0; i <= 9; i++) {
+        const combsPorDigito = data.por_primeiro_digito[i] || [];
+        
+        // Skip if no combinations for this digit
+        if (combsPorDigito.length === 0) continue;
+        
+        // Tab button
+        const tabBtn = document.createElement('button');
+        tabBtn.className = 'tab-btn';
+        tabBtn.textContent = `Início ${i} (${combsPorDigito.length})`;
+        tabBtn.dataset.target = `tab-${i}`;
+        if (i === 0) tabBtn.classList.add('active');
+        
+        tabBtn.addEventListener('click', (e) => {
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            e.target.classList.add('active');
+            
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+            // Show the target tab content
+            document.getElementById(e.target.dataset.target).style.display = 'block';
+        });
+        
+        tabsNav.appendChild(tabBtn);
+        
+        // Tab content
+        const tabContent = document.createElement('div');
+        tabContent.className = 'tab-content';
+        tabContent.id = `tab-${i}`;
+        tabContent.style.display = i === 0 ? 'block' : 'none';
+        
+        // Create table for combinations
+        const comboTable = document.createElement('table');
+        comboTable.className = 'combo-table';
+        
+        // Create rows to display combinations in a grid
+        const combsPerRow = 6;
+        const rows = Math.ceil(combsPorDigito.length / combsPerRow);
+        
+        for (let j = 0; j < rows; j++) {
+            const row = document.createElement('tr');
+            
+            for (let k = 0; k < combsPerRow; k++) {
+                const index = j * combsPerRow + k;
+                
+                if (index < combsPorDigito.length) {
+                    const cell = document.createElement('td');
+                    cell.textContent = combsPorDigito[index].join(',');
+                    row.appendChild(cell);
+                } else {
+                    const cell = document.createElement('td');
+                    row.appendChild(cell);
+                }
+            }
+            
+            comboTable.appendChild(row);
+        }
+        
+        tabContent.appendChild(comboTable);
+        tabsContent.appendChild(tabContent);
+    }
+    
+    tabsContainer.appendChild(tabsNav);
+    tabsContainer.appendChild(tabsContent);
+    modalBody.appendChild(tabsContainer);
+    
+    // Adicionar tudo ao modal
+    modalContent.appendChild(modalHeader);
+    modalContent.appendChild(modalBody);
+    modalOverlay.appendChild(modalContent);
+    
+    // Adicionar o modal à página
+    document.body.appendChild(modalOverlay);
+}
+
+// Função para atualizar a tabela com os dados de combinações específicas
+function atualizarTabelaComDados() {
+    const tamanho = parseInt(tamanhoTabelaSelect.value);
+    if (tamanho >= 1 && tamanho <= 10) {
+        // Se já não temos esses dados, temos que carregá-los
+        if (!combinacoesData[tamanho]) {
+            carregarCombinacoes(tamanho);
+        } else {
+            // Caso contrário, apenas atualizamos a exibição
+            atualizarCombinacoes(tamanho);
+        }
+    }
+}
+// Elementos do DOM
+const tamanhoSelect = document.getElementById('tamanho');
+const gerarBtn = document.getElementById('gerar');
+const resultadoTitulo = document.getElementById('resultado-titulo');
+const totalInfo = document.getElementById('total-info');
+const combinacoesContainer = document.getElementById('combinacoes');
+const anteriorBtn = document.getElementById('anterior');
+const proximoBtn = document.getElementById('proximo');
+const paginaInfo = document.getElementById('pagina-info');
+const verEstatisticasBtn = document.getElementById('ver-estatisticas');
+
+// Variáveis para controle da paginação
+let todasCombinacoes = [];
+let paginaAtual = 1;
+const itensPorPagina = 30;
+
+// Função para gerar combinações
+function gerarCombinacoes(conjunto, tamanho) {
+    const combinacoes = [];
+    
+    function combinar(inicio, atual) {
+        if (atual.length === tamanho) {
+            combinacoes.push([...atual]);
+            return;
+        }
+        
+        for (let i = inicio; i < conjunto.length; i++) {
+            atual.push(conjunto[i]);
+            combinar(i + 1, atual);
+            atual.pop();
+        }
+    }
+    
+    combinar(0, []);
+    return combinacoes;
+}
+
+// Função para mostrar combinações na página atual
+function mostrarCombinacoes() {
+    combinacoesContainer.innerHTML = '';
+    
+    const inicio = (paginaAtual - 1) * itensPorPagina;
+    const fim = Math.min(inicio + itensPorPagina, todasCombinacoes.length);
+    
+    for (let i = inicio; i < fim; i++) {
+        const combDiv = document.createElement('div');
+        combDiv.classList.add('comb-item');
+        combDiv.textContent = todasCombinacoes[i].join(',');
+        combinacoesContainer.appendChild(combDiv);
+    }
+    
+    // Atualizar informações de paginação
+    paginaInfo.textContent = `Página ${paginaAtual} de ${Math.ceil(todasCombinacoes.length / itensPorPagina)}`;
+    anteriorBtn.disabled = paginaAtual === 1;
+    proximoBtn.disabled = paginaAtual === Math.ceil(todasCombinacoes.length / itensPorPagina);
+    
+    // Habilitar o botão de estatísticas quando houver combinações
+    if (verEstatisticasBtn) {
+        verEstatisticasBtn.disabled = todasCombinacoes.length === 0;
+    }
+}
+
+// Função para criar popup de estatísticas rápidas
+function mostrarEstatisticasRapidas() {
+    if (todasCombinacoes.length === 0) {
+        alert('Gere combinações primeiro para ver estatísticas.');
+        return;
+    }
+    
+    const tamanho = parseInt(tamanhoSelect.value);
+    
+    // Agrupar combinações por primeiro dígito
+    const porPrimeiroDigito = {};
+    for (let i = 0; i < 10; i++) {
+        porPrimeiroDigito[i] = todasCombinacoes.filter(comb => comb[0] === i);
+    }
+    
+    // Criar o popup
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    
+    // Cabeçalho do popup
+    const modalHeader = document.createElement('div');
+    modalHeader.className = 'modal-header';
+    
+    const modalTitle = document.createElement('h2');
+    modalTitle.textContent = `Estatísticas para ${tamanho} dígito(s)`;
+    
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = '×';
+    closeBtn.className = 'modal-close';
+    closeBtn.addEventListener('click', () => {
+        document.body.removeChild(modalOverlay);
+    });
+    
+    modalHeader.appendChild(modalTitle);
+    modalHeader.appendChild(closeBtn);
+    
+    // Corpo do popup
+    const modalBody = document.createElement('div');
+    modalBody.className = 'modal-body';
+    
+    // Adicionar resumo das estatísticas
+    const estatisticasDiv = document.createElement('div');
+    estatisticasDiv.className = 'estatisticas-resumo';
+    
+    // Total de combinações
+    const totalDiv = document.createElement('div');
+    totalDiv.className = 'estatistica-item';
+    totalDiv.innerHTML = `<strong>Total de combinações:</strong> ${todasCombinacoes.length}`;
+    estatisticasDiv.appendChild(totalDiv);
+    
+    // Combinações por primeiro dígito
+    const porDigitoDiv = document.createElement('div');
+    porDigitoDiv.className = 'estatistica-por-digito';
+    porDigitoDiv.innerHTML = '<strong>Combinações por primeiro dígito:</strong>';
+    
+    const digitsTable = document.createElement('table');
+    digitsTable.className = 'digitos-table';
+    
+    // Cabeçalho da tabela
+    const headerRow = document.createElement('tr');
+    for (let i = 0; i < 10; i++) {
+        const th = document.createElement('th');
+        th.textContent = i;
+        headerRow.appendChild(th);
+    }
+    digitsTable.appendChild(headerRow);
+    
+    // Valores
+    const valuesRow = document.createElement('tr');
+    for (let i = 0; i < 10; i++) {
+        const td = document.createElement('td');
+        td.textContent = porPrimeiroDigito[i] ? porPrimeiroDigito[i].length : 0;
+        valuesRow.appendChild(td);
+    }
+    digitsTable.appendChild(valuesRow);
+    
+    porDigitoDiv.appendChild(digitsTable);
+    estatisticasDiv.appendChild(porDigitoDiv);
+    
+    // Adicionar link para estatísticas completas
+    const linkCompleto = document.createElement('div');
+    linkCompleto.className = 'link-completo';
+    const linkBtn = document.createElement('a');
+    linkBtn.href = '/tabela_combinacoes';
+    linkBtn.className = 'btn-link';
+    linkBtn.textContent = 'Ver Tabela Completa de Estatísticas';
+    linkCompleto.appendChild(linkBtn);
+    
+    modalBody.appendChild(estatisticasDiv);
+    modalBody.appendChild(linkCompleto);
+    
+    // Adicionar ao modal
+    modalContent.appendChild(modalHeader);
+    modalContent.appendChild(modalBody);
+    modalOverlay.appendChild(modalContent);
+    
+    // Adicionar à página
+    document.body.appendChild(modalOverlay);
+}
+
+// Event listeners
+gerarBtn.addEventListener('click', () => {
+    const tamanho = parseInt(tamanhoSelect.value);
+    const digitos = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    
+    // Gerar todas as combinações
+    todasCombinacoes = gerarCombinacoes(digitos, tamanho);
+    
+    // Resetar paginação
+    paginaAtual = 1;
+    
+    // Atualizar interface
+    resultadoTitulo.textContent = `Combinações com ${tamanho} dígito(s)`;
+    totalInfo.textContent = `Total de combinações: ${todasCombinacoes.length}`;
+    
+    // Mostrar combinações
+    mostrarCombinacoes();
+    
+    // Também armazenar no localStorage para uso na página de estatísticas
+    try {
+        localStorage.setItem('ultimo_tamanho', tamanho);
+    } catch (e) {
+        console.error('Erro ao salvar no localStorage:', e);
+    }
+});
+
+anteriorBtn.addEventListener('click', () => {
+    if (paginaAtual > 1) {
+        paginaAtual--;
+        mostrarCombinacoes();
+    }
+});
+
+proximoBtn.addEventListener('click', () => {
+    if (paginaAtual < Math.ceil(todasCombinacoes.length / itensPorPagina)) {
+        paginaAtual++;
+        mostrarCombinacoes();
+    }
+});
+
+// Verificar se o botão de estatísticas existe e adicionar evento
+if (verEstatisticasBtn) {
+    verEstatisticasBtn.addEventListener('click', mostrarEstatisticasRapidas);
+}
+
+// Inicializar as combinações quando a página carrega (opcional)
+document.addEventListener('DOMContentLoaded', () => {
+    // Adicionar botão de estatísticas se não existir no HTML
+    if (!verEstatisticasBtn) {
+        const estatisticasBtn = document.createElement('button');
+        estatisticasBtn.id = 'ver-estatisticas';
+        estatisticasBtn.textContent = 'Ver Estatísticas';
+        estatisticasBtn.className = 'btn-estatisticas';
+        estatisticasBtn.disabled = true;
+        estatisticasBtn.addEventListener('click', mostrarEstatisticasRapidas);
+        
+        // Adicionar após o botão gerar
+        gerarBtn.parentElement.appendChild(estatisticasBtn);
+    }
+    
+    // Também poderíamos carregar automaticamente o mesmo tamanho da página de estatísticas
+    try {
+        const ultimoTamanho = localStorage.getItem('ultimo_tamanho');
+        if (ultimoTamanho) {
+            tamanhoSelect.value = ultimoTamanho;
+        }
+    } catch (e) {
+        console.error('Erro ao ler do localStorage:', e);
+    }
+});
+// Elementos do DOM
+document.addEventListener('DOMContentLoaded', function() {
+    // Tabs de navegação
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    // Tab de combinação específica
+    const combinacaoInput = document.getElementById('combinacao-input');
+    const analisarBtn = document.getElementById('analisar-btn');
+    const infoCombinacao = document.getElementById('info-combinacao');
+    const totalAgrupamentos = document.getElementById('total-agrupamentos');
+    const agrupamentosContainer = document.getElementById('agrupamentos-container');
+    const palpitesInfo = document.getElementById('palpites-info');
+    
+    // Tab de todas as combinações
+    const tamanhoSelect = document.getElementById('tamanho-select');
+    const carregarTodasBtn = document.getElementById('carregar-todas-btn');
+    const filtroPrimeiro = document.getElementById('filtro-primeiro');
+    const buscaInput = document.getElementById('busca-input');
+    const buscaBtn = document.getElementById('busca-btn');
+    const totalCombinacoes = document.getElementById('total-combinacoes');
+    const combinacoesBody = document.getElementById('combinacoes-body');
+    const anteriorBtn = document.getElementById('anterior-btn');
+    const proximoBtn = document.getElementById('proximo-btn');
+    const paginaInfo = document.getElementById('pagina-info');
+    
+    // Variáveis de controle
+    let todasCombinacoes = [];
+    let combinacoesFiltradas = [];
+    let paginaAtual = 1;
+    const itensPorPagina = 20;
+    
+    // Função para trocar entre tabs
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remover classe active de todos os botões
+            tabBtns.forEach(b => b.classList.remove('active'));
+            // Adicionar classe active ao botão clicado
+            btn.classList.add('active');
+            
+            // Esconder todos os conteúdos
+            tabContents.forEach(content => content.classList.add('hidden'));
+            // Mostrar o conteúdo correspondente
+            const tabId = btn.getAttribute('data-tab');
+            document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+        });
+    });
+    
+    // Função para analisar uma combinação específica
+    analisarBtn.addEventListener('click', analisarCombinacao);
+    
+    function analisarCombinacao() {
+        const combinacao = combinacaoInput.value.trim();
+        
+        // Validar a entrada
+        if (!combinacao) {
+            alert('Por favor, digite uma combinação válida.');
+            return;
+        }
+        
+        // Limpar os resultados anteriores
+        infoCombinacao.innerHTML = '<div class="loader"></div>';
+        totalAgrupamentos.innerHTML = '';
+        agrupamentosContainer.innerHTML = '';
+        palpitesInfo.innerHTML = '';
+        
+        // Fazer a requisição à API
+        fetch(`/api/combinacao_agrupamentos/${combinacao}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao analisar a combinação.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Exibir informações da combinação
+                infoCombinacao.innerHTML = `
+                    <p><strong>Combinação:</strong> ${data.combinacao.join(', ')}</p>
+                    <p><strong>Tamanho:</strong> ${data.tamanho} dígitos</p>
+                `;
+                
+                // Exibir total de agrupamentos
+                totalAgrupamentos.innerHTML = `
+                    <p>Total de agrupamentos de dois em dois: <strong>${data.total_agrupamentos}</strong></p>
+                `;
+                
+                // Exibir os agrupamentos
+                agrupamentosContainer.innerHTML = '';
+                data.agrupamentos.forEach(ag => {
+                    const agItem = document.createElement('div');
+                    agItem.className = 'agrupamento-item';
+                    agItem.textContent = ag.par_str;
+                    agrupamentosContainer.appendChild(agItem);
+                });
+                
+                // Exibir palpites (se disponível)
+                if (data.palpites_mega) {
+                    palpitesInfo.innerHTML = `
+                        <p><strong>Palpites Mega Sena:</strong> ${data.palpites_mega.toLocaleString()}</p>
+                    `;
+                } else {
+                    palpitesInfo.innerHTML = `
+                        <p>Não há informações de palpites disponíveis para esta combinação.</p>
+                    `;
+                }
+                
+                // Adicionar tabela de resumo
+                const tabelaResumo = criarTabelaResumo(data);
+                palpitesInfo.appendChild(tabelaResumo);
+            })
+            .catch(error => {
+                infoCombinacao.innerHTML = `<p class="error">Erro: ${error.message}</p>`;
+            });
+    }
+    
+    // Função para criar tabela de resumo
+    function criarTabelaResumo(data) {
+        const tabela = document.createElement('table');
+        tabela.className = 'tabela-combinacoes';
+        
+        // Criar cabeçalho
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        
+        const headers = ['Dígitos', 'Tamanho Agrupamento', 'Total de Combinações', 'Palpites Mega Sena'];
+        headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+        
+        thead.appendChild(headerRow);
+        tabela.appendChild(thead);
+        
+        // Criar corpo da tabela
+        const tbody = document.createElement('tbody');
+        const row = document.createElement('tr');
+        
+        // Coluna Dígitos
+        const tdDigitos = document.createElement('td');
+        tdDigitos.textContent = data.combinacao.join(',');
+        tdDigitos.className = 'destaque';
+        row.appendChild(tdDigitos);
+        
+        // Coluna Tamanho Agrupamento
+        const tdTamanho = document.createElement('td');
+        tdTamanho.textContent = data.tamanho_agrupamento;
+        row.appendChild(tdTamanho);
+        
+        // Coluna Total de Combinações
+        const tdTotal = document.createElement('td');
+        tdTotal.textContent = data.total_agrupamentos;
+        tdTotal.className = 'destaque';
+        row.appendChild(tdTotal);
+        
+        // Coluna Palpites Mega Sena
+        const tdPalpites = document.createElement('td');
+        if (data.palpites_mega) {
+            tdPalpites.textContent = data.palpites_mega.toLocaleString();
+            tdPalpites.className = 'valor-conhecido';
+        } else {
+            tdPalpites.textContent = '?';
+            tdPalpites.className = 'valor-desconhecido';
+        }
+        row.appendChild(tdPalpites);
+        
+        tbody.appendChild(row);
+        tabela.appendChild(tbody);
+        
+        return tabela;
+    }
+    
+    // Função para carregar todas as combinações
+    carregarTodasBtn.addEventListener('click', carregarTodasCombinacoes);
+    
+    function carregarTodasCombinacoes() {
+        const tamanho = parseInt(tamanhoSelect.value);
+        
+        // Limpar os resultados anteriores
+        totalCombinacoes.innerHTML = '<div class="loader"></div>';
+        combinacoesBody.innerHTML = '';
+        
+        // Fazer a requisição à API
+        fetch(`/api/combinacoes_agrupadas/${tamanho}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar as combinações.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Armazenar todas as combinações
+                todasCombinacoes = data.resultados;
+                combinacoesFiltradas = [...todasCombinacoes];
+                
+                // Exibir total
+                totalCombinacoes.innerHTML = `
+                    <p>Total de combinações com ${tamanho} dígitos: <strong>${data.total_combinacoes}</strong></p>
+                `;
+                
+                // Resetar paginação
+                paginaAtual = 1;
+                
+                // Mostrar combinações
+                mostrarCombinacoesPaginadas();
+            })
+            .catch(error => {
+                totalCombinacoes.innerHTML = `<p class="error">Erro: ${error.message}</p>`;
+            });
+    }
+    
+    // Função para mostrar combinações paginadas
+    function mostrarCombinacoesPaginadas() {
+        combinacoesBody.innerHTML = '';
+        
+        const inicio = (paginaAtual - 1) * itensPorPagina;
+        const fim = Math.min(inicio + itensPorPagina, combinacoesFiltradas.length);
+        
+        // Verificar se há combinações para mostrar
+        if (combinacoesFiltradas.length === 0) {
+            combinacoesBody.innerHTML = `
+                <tr>
+                    <td colspan="3" class="text-center">Nenhuma combinação encontrada.</td>
+                </tr>
+            `;
+            paginaInfo.textContent = 'Página 0 de 0';
+            anteriorBtn.disabled = true;
+            proximoBtn.disabled = true;
+            return;
+        }
+        
+        // Mostrar as combinações da página atual
+        for (let i = inicio; i < fim; i++) {
+            const comb = combinacoesFiltradas[i];
+            const row = document.createElement('tr');
+            
+            // Coluna Combinação
+            const tdComb = document.createElement('td');
+            tdComb.textContent = comb.combinacao_str;
+            row.appendChild(tdComb);
+            
+            // Coluna Total de Agrupamentos
+            const tdTotal = document.createElement('td');
+            tdTotal.textContent = comb.total_agrupamentos;
+            row.appendChild(tdTotal);
+            
+            // Coluna Ações
+            const tdAcoes = document.createElement('td');
+            
+            const verBtn = document.createElement('button');
+            verBtn.className = 'acao-btn';
+            verBtn.textContent = 'Ver Detalhes';
+            verBtn.addEventListener('click', () => mostrarDetalhesCombinacao(comb.combinacao_str));
+            tdAcoes.appendChild(verBtn);
+            
+            row.appendChild(tdAcoes);
+            
+            combinacoesBody.appendChild(row);
+        }
+        
+        // Atualizar informações de paginação
+        paginaInfo.textContent = `Página ${paginaAtual} de ${Math.ceil(combinacoesFiltradas.length / itensPorPagina)}`;
+        anteriorBtn.disabled = paginaAtual === 1;
+        proximoBtn.disabled = paginaAtual === Math.ceil(combinacoesFiltradas.length / itensPorPagina);
+    }
+    
+    // Evento de clique para os botões de paginação
+    anteriorBtn.addEventListener('click', () => {
+        if (paginaAtual > 1) {
+            paginaAtual--;
+            mostrarCombinacoesPaginadas();
+        }
+    });
+    
+    proximoBtn.addEventListener('click', () => {
+        if (paginaAtual < Math.ceil(combinacoesFiltradas.length / itensPorPagina)) {
+            paginaAtual++;
+            mostrarCombinacoesPaginadas();
+        }
+    });
+    
+    // Filtrar por primeiro dígito
+    filtroPrimeiro.addEventListener('change', filtrarCombinacoes);
+    
+    function filtrarCombinacoes() {
+        const filtro = filtroPrimeiro.value;
+        
+        if (filtro === 'todos') {
+            combinacoesFiltradas = [...todasCombinacoes];
+        } else {
+            const digito = parseInt(filtro);
+            combinacoesFiltradas = todasCombinacoes.filter(comb => comb.combinacao[0] === digito);
+        }
+        
+        // Resetar paginação
+        paginaAtual = 1;
+        
+        // Mostrar combinações filtradas
+        mostrarCombinacoesPaginadas();
+    }
+    
+    // Buscar combinação
+    buscaBtn.addEventListener('click', buscarCombinacao);
+    
+    function buscarCombinacao() {
+        const busca = buscaInput.value.trim();
+        
+        if (!busca) {
+            // Restaurar todas as combinações
+            combinacoesFiltradas = [...todasCombinacoes];
+        } else {
+            // Filtrar combinações que contêm a busca
+            combinacoesFiltradas = todasCombinacoes.filter(comb => 
+                comb.combinacao_str.includes(busca)
+            );
+        }
+        
+        // Resetar paginação
+        paginaAtual = 1;
+        
+        // Mostrar combinações filtradas
+        mostrarCombinacoesPaginadas();
+    }
+    
+    // Função para mostrar detalhes de uma combinação específica
+    function mostrarDetalhesCombinacao(combinacao) {
+        // Fazer a requisição à API
+        fetch(`/api/combinacao_agrupamentos/${combinacao}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar os detalhes da combinação.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Criar modal
+                const modalOverlay = document.createElement('div');
+                modalOverlay.className = 'modal-overlay';
+                
+                const modalContent = document.createElement('div');
+                modalContent.className = 'modal-content modal-detalhes';
+                
+                // Cabeçalho do modal
+                const modalHeader = document.createElement('div');
+                modalHeader.className = 'modal-header';
+                
+                const modalTitle = document.createElement('h2');
+                modalTitle.textContent = `Detalhes da Combinação ${data.combinacao.join(',')}`;
+                
+                const closeBtn = document.createElement('button');
+                closeBtn.textContent = '×';
+                closeBtn.className = 'modal-close';
+                closeBtn.addEventListener('click', () => {
+                    document.body.removeChild(modalOverlay);
+                });
+                
+                modalHeader.appendChild(modalTitle);
+                modalHeader.appendChild(closeBtn);
+                
+                // Corpo do modal
+                const modalBody = document.createElement('div');
+                modalBody.className = 'modal-body';
+                
+                // Informações gerais
+                const infoGeral = document.createElement('div');
+                infoGeral.className = 'info-geral';
+                
+                infoGeral.innerHTML = `
+                    <h3>Informações da Combinação</h3>
+                    <p><strong>Combinação:</strong> ${data.combinacao.join(', ')}</p>
+                    <p><strong>Tamanho:</strong> ${data.tamanho} dígitos</p>
+                    <p><strong>Total de agrupamentos de dois em dois:</strong> ${data.total_agrupamentos}</p>
+                `;
+                
+                if (data.palpites_mega) {
+                    infoGeral.innerHTML += `
+                        <p><strong>Palpites Mega Sena:</strong> ${data.palpites_mega.toLocaleString()}</p>
+                    `;
+                }
+                
+                modalBody.appendChild(infoGeral);
+                
+                // Tabela de resumo
+                const tabelaResumo = criarTabelaResumo(data);
+                modalBody.appendChild(tabelaResumo);
+                
+                // Agrupamentos
+                const agrupamentosTitle = document.createElement('h3');
+                agrupamentosTitle.textContent = 'Agrupamentos de Dois em Dois';
+                modalBody.appendChild(agrupamentosTitle);
+                
+                const detalhesGrid = document.createElement('div');
+                detalhesGrid.className = 'detalhes-grid';
+                
+                data.agrupamentos.forEach(ag => {
+                    const detalheItem = document.createElement('div');
+                    detalheItem.className = 'detalhe-item';
+                    detalheItem.textContent = ag.par_str;
+                    detalhesGrid.appendChild(detalheItem);
+                });
+                
+                modalBody.appendChild(detalhesGrid);
+                
+                // Adicionar tudo ao modal
+                modalContent.appendChild(modalHeader);
+                modalContent.appendChild(modalBody);
+                modalOverlay.appendChild(modalContent);
+                
+                // Adicionar o modal à página
+                document.body.appendChild(modalOverlay);
+            })
+            .catch(error => {
+                alert(`Erro ao carregar os detalhes: ${error.message}`);
+            });
+    }
+    
+    // Executar funções iniciais
+    // Se houver uma combinação padrão no input, analisar ela
+    if (combinacaoInput.value.trim()) {
+        analisarCombinacao();
+    }
+    
+    // Exemplo de combinações populares
+    const exemplosCombinacoes = {
+        "7 dígitos": [
+            "0,1,2,3,4,5,6",
+            "0,1,2,3,4,5,7",
+            "0,1,2,3,4,5,8",
+            "0,1,2,3,4,5,9",
+            "0,1,2,3,4,6,7"
+        ]
+    };
+    
+    // Função para criar tabela de exemplo para a página inicial
+    function criarTabelaExemplos() {
+        // Criar a tabela de exemplos
+        const tabelaExemplos = document.createElement('div');
+        tabelaExemplos.className = 'exemplos-container';
+        tabelaExemplos.innerHTML = `
+            <h2>Exemplos de Combinações</h2>
+            <p>Clique em uma combinação para analisá-la:</p>
+        `;
+        
+        const tabela = document.createElement('table');
+        tabela.className = 'tabela-combinacoes';
+        
+        // Criar cabeçalho
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        
+        const headers = ['Dígitos', 'Tamanho Agrupamento', 'Total Combinações', 'Palpites Mega Sena'];
+        headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            headerRow.appendChild(th);
+        });
+        
+        thead.appendChild(headerRow);
+        tabela.appendChild(thead);
+        
+        // Criar corpo da tabela com exemplos
+        const tbody = document.createElement('tbody');
+        
+        const exemplos = [
+            {
+                combinacao: "0,1,2,3,4,5,6",
+                tamanho_agrupamento: 2,
+                total_combinacoes: 21,
+                palpites_mega: 35280
+            },
+            {
+                combinacao: "0,1,2,3,4,5,7",
+                tamanho_agrupamento: 2,
+                total_combinacoes: 21,
+                palpites_mega: 35280
+            },
+            {
+                combinacao: "0,1,2,3,4,6,7",
+                tamanho_agrupamento: 2,
+                total_combinacoes: 21,
+                palpites_mega: 35280
+            },
+            {
+                combinacao: "0,1,2,3,4,6,8",
+                tamanho_agrupamento: 2,
+                total_combinacoes: 21,
+                palpites_mega: 35280
+            },
+            {
+                combinacao: "0,1,2,3,4,6,9",
+                tamanho_agrupamento: 2,
+                total_combinacoes: 21,
+                palpites_mega: 35280
+            }
+        ];
+        
+        exemplos.forEach(exemplo => {
+            const row = document.createElement('tr');
+            
+            // Coluna Dígitos (clicável)
+            const tdDigitos = document.createElement('td');
+            tdDigitos.textContent = exemplo.combinacao;
+            tdDigitos.className = 'combo-cell';
+            tdDigitos.style.cursor = 'pointer';
+            tdDigitos.addEventListener('click', () => {
+                // Preencher o input com esta combinação
+                combinacaoInput.value = exemplo.combinacao;
+                // Mudar para a tab de combinação específica
+                document.querySelector('.tab-btn[data-tab="combinacao"]').click();
+                // Analisar a combinação
+                analisarCombinacao();
+            });
+            row.appendChild(tdDigitos);
+            
+            // Coluna Tamanho Agrupamento
+            const tdTamanho = document.createElement('td');
+            tdTamanho.textContent = exemplo.tamanho_agrupamento;
+            row.appendChild(tdTamanho);
+            
+            // Coluna Total de Combinações
+            const tdTotal = document.createElement('td');
+            tdTotal.textContent = exemplo.total_combinacoes;
+            row.appendChild(tdTotal);
+            
+            // Coluna Palpites Mega Sena
+            const tdPalpites = document.createElement('td');
+            tdPalpites.textContent = exemplo.palpites_mega.toLocaleString();
+            row.appendChild(tdPalpites);
+            
+            tbody.appendChild(row);
+        });
+        
+        tabela.appendChild(tbody);
+        tabelaExemplos.appendChild(tabela);
+        
+        // Adicionar à página
+        document.querySelector('.info-box').appendChild(tabelaExemplos);
+    }
+    
+    // Criar a tabela de exemplos
+    setTimeout(criarTabelaExemplos, 500);
+});
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.tabela-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-container {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.title {
+    font-size: 24px;
+    color: #000;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #333;
+    margin-top: 0;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.tabela-estatisticas {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.tabela-estatisticas th {
+    background-color: #f2f2f2;
+    color: #333;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.tabela-estatisticas th:first-child {
+    background-color: #000;
+    color: white;
+}
+
+.tabela-estatisticas td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.tabela-estatisticas tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabela-estatisticas tr:hover {
+    background-color: #f0f7ff;
+}
+
+/* Estilos para combos específicos */
+.combo-cell {
+    font-family: monospace;
+    white-space: nowrap;
+}
+
+.question-mark {
+    color: #999;
+    font-weight: bold;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.controls label {
+    font-weight: bold;
+}
+
+.controls select, 
+.controls button,
+.controls .link-button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.controls button,
+.controls .link-button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+}
+
+.controls .link-button {
+    background-color: #2196F3;
+}
+
+.controls button:hover,
+.controls .link-button:hover {
+    opacity: 0.9;
+}
+
+footer {
+    color: #161515;
+    text-align: center;
+    padding: 5px;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+}
+
+/* Estilos para telas menores */
+@media (max-width: 768px) {
+    .tabela-estatisticas {
+        font-size: 12px;
+    }
+    
+    .tabela-estatisticas th,
+    .tabela-estatisticas td {
+        padding: 6px 4px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .controls select, 
+    .controls button,
+    .controls .link-button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+h1 {
+    color: #333;
+    text-align: center;
+}
+.container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+label {
+    font-weight: bold;
+}
+select, button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+button:hover {
+    background-color: #45a049;
+}
+.results {
+    margin-top: 20px;
+}
+.combs-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+.comb-item {
+    background-color: #e9f5ff;
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    font-family: monospace;
+    border: 1px solid #ccc;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+.pagination button {
+    width: 100px;
+}
+.info {
+    text-align: center;
+    margin-top: 10px;
+    color: #666;
+}
+footer {
+    color: #161515;
+    text-align: center;
+    padding: 5px;
+    margin-bottom: auto;
+    margin-top: 10px; /* Espaço acima do rodapé */
+}
+/* Estilos para o link da tabela */
+.tabela-link-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.tabela-link-container h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.tabela-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.tabela-link:hover {
+    background-color: #0b7dda;
+}
+/* Estilos para o modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #2196F3;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.combo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.combo-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-family: monospace;
+    background-color: #f9f9f9;
+}
+
+.combo-table tr:nth-child(even) td {
+    background-color: #f0f7ff;
+}
+
+/* Estilo para células clicáveis */
+.combo-cell.clickable {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.combo-cell.clickable:hover {
+    background-color: #e3f2fd;
+    text-decoration: underline;
+}
+.instrucaoes{
+    background-color: #f9f9f9; /* Fundo cinza claro */
+    border-radius: 12px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra leve */
+    padding: 20px; /* Espaçamento interno */
+    text-align: left; /* Centraliza o texto */
+    font-family: Arial, sans-serif; /* Fonte padrão */
+    color: #333; /* Cor do texto */
+    line-height: 35px;
+}
+.links-nav {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.tabela-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2196F3;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.tabela-link:hover {
+    background-color: #0b7dda;
+}
+/* Estilos para o modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modal-content.modal-large {
+    max-width: 1200px;
+    width: 95%;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #2196F3;
+    color: white;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.combo-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.combo-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-family: monospace;
+    background-color: #f9f9f9;
+}
+
+.combo-table tr:nth-child(even) td {
+    background-color: #f0f7ff;
+}
+
+/* Estilo para células clicáveis */
+.combo-cell {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.combo-cell:hover {
+    background-color: #e3f2fd;
+    text-decoration: underline;
+}
+
+/* Estilo para a navegação por tabs */
+.tabs-container {
+    margin-top: 20px;
+}
+
+.tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    padding: 8px 15px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.tab-btn.active {
+    background-color: #2196F3;
+    color: white;
+    border-color: #0b7dda;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content:first-child {
+    display: block;
+}
+
+.etc-cell {
+    color: #2196F3;
+    font-weight: bold;
+}
+
+/* Estilo para tabela de todas as combinações */
+.all-combinations {
+    margin-top: 20px;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .tabs-nav {
+        justify-content: center;
+    }
+    
+    .tab-btn {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+    
+    .combo-table td {
+        padding: 5px;
+        font-size: 13px;
+    }
+}
+/* Estilos para a página de agrupamento */
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    padding: 10px 15px;
+    margin-right: 5px;
+    background-color: #f2f2f2;
+    border: 1px solid #ddd;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.tab-btn.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #4CAF50;
+}
+
+.tab-content {
+    display: block;
+}
+
+.tab-content.hidden {
+    display: none;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    font-weight: bold;
+}
+
+.input-group input, 
+.input-group select {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    flex: 1;
+}
+
+.input-group button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.input-group button:hover {
+    background-color: #45a049;
+}
+
+.info-box, .agrupamentos-box, .palpites-box {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.info-box h2, .agrupamentos-box h2, .palpites-box h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.agrupamentos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+}
+
+.agrupamento-item {
+    background-color: #e9f5ff;
+    border-radius: 4px;
+    padding: 8px;
+    text-align: center;
+    font-family: monospace;
+    border: 1px solid #ccc;
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.filter-group, .search-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+#combinacoes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#combinacoes-table th {
+    background-color: #f2f2f2;
+    color: #333;
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+#combinacoes-table td {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+}
+
+#combinacoes-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#combinacoes-table tr:hover {
+    background-color: #f0f7ff;
+}
+
+.acao-btn {
+    padding: 5px 10px;
+    margin-right: 5px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.acao-btn:hover {
+    background-color: #0b7dda;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    padding: 8px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.link-container {
+    max-width: 800px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.link-button {
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #2196F3;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.link-button:hover {
+    background-color: #0b7dda;
+}
+
+/* Estilos para a tabela de combinações */
+.tabela-combinacoes {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 14px;
+}
+
+.tabela-combinacoes th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.tabela-combinacoes td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.tabela-combinacoes tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabela-combinacoes tr:hover {
+    background-color: #f0f7ff;
+}
+
+/* Destaque para células específicas */
+.destaque {
+    background-color: #e3f2fd;
+    font-weight: bold;
+}
+
+.valor-conhecido {
+    background-color: #e8f5e9;
+}
+
+.valor-desconhecido {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+/* Modal para visualização de detalhes */
+.modal-detalhes .modal-content {
+    max-width: 900px;
+}
+
+.detalhes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.detalhe-item {
+    background-color: #f0f7ff;
+    padding: 8px;
+    border-radius: 4px;
+    text-align: center;
+    border: 1px solid #d0d0d0;
+}
+
+/* Estilos para estatísticas */
+.estatisticas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.estatistica-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.estatistica-titulo {
+    font-size: 16px;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.estatistica-valor {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2196F3;
+}
+
+.estatistica-detalhes {
+    font-size: 13px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Loader para carregamento */
+.loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #2196F3;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+    margin: 30px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .input-group, .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .input-group input, 
+    .input-group select,
+    .input-group button {
+        width: 100%;
+    }
+    
+    .filter-group, .search-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .tabela-combinacoes {
+        font-size: 12px;
+    }
+    
+    .tabela-combinacoes th,
+    .tabela-combinacoes td {
+        padding: 6px 4px;
+    }
+}
+
+/* Tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -100px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext

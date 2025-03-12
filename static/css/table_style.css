@@ -1,0 +1,161 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+.tabela-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-container {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.title {
+    font-size: 24px;
+    color: #000;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-size: 20px;
+    color: #333;
+    margin-top: 0;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.tabela-estatisticas {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.tabela-estatisticas th {
+    background-color: #f2f2f2;
+    color: #333;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.tabela-estatisticas th:first-child {
+    background-color: #000;
+    color: white;
+}
+
+.tabela-estatisticas td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.tabela-estatisticas tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.tabela-estatisticas tr:hover {
+    background-color: #f0f7ff;
+}
+
+/* Estilos para combos específicos */
+.combo-cell {
+    font-family: monospace;
+    white-space: nowrap;
+}
+
+.question-mark {
+    color: #999;
+    font-weight: bold;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+.controls label {
+    font-weight: bold;
+}
+
+.controls select, 
+.controls button,
+.controls .link-button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.controls button,
+.controls .link-button {
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    text-align: center;
+    display: inline-block;
+}
+
+.controls .link-button {
+    background-color: #2196F3;
+}
+
+.controls button:hover,
+.controls .link-button:hover {
+    opacity: 0.9;
+}
+
+footer {
+    color: #161515;
+    text-align: center;
+    padding: 5px;
+    margin-top: 30px;
+    border-top: 1px solid #ddd;
+}
+
+/* Estilos para telas menores */
+@media (max-width: 768px) {
+    .tabela-estatisticas {
+        font-size: 12px;
+    }
+    
+    .tabela-estatisticas th,
+    .tabela-estatisticas td {
+        padding: 6px 4px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .controls select, 
+    .controls button,
+    .controls .link-button {
+        width: 100%;
+        margin: 5px 0;
+    }
+}
